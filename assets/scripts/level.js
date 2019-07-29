@@ -62,6 +62,7 @@ cc.Class({
         global.event.on("build_tower", this.buildTower.bind(this));
         global.event.on("update_tower", this.updateTower.bind(this));
         global.event.on("sell_tower", this.sellTower.bind(this));
+        global.event.on("game_start", this.gameStart.bind(this));
 
     },
     setTouchEvent: function(node) {
@@ -158,6 +159,19 @@ cc.Class({
 
         this.setState(node, towerPosNodesStae.Null);
         node.tower.getComponent("tower").sellTower();
+
+    },
+    gameStart:function(){
+        cc.loader.loadRes("./config/levelConfig",(err,result)=>{
+            if(err){
+                cc.log("load config err"+err);
+
+            }else{
+                cc.log("load succ"+JSON.stringify(result));
+            }
+
+            let config = reult["level_1"];
+        });
 
     },
     onDestroy: function() {
