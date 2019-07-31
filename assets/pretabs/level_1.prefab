@@ -1619,6 +1619,9 @@
     "updateMenuPrefab": {
       "__uuid__": "96d325a1-8f01-4a0a-baa8-b2af02f1891f"
     },
+    "enemyPrefbs": {
+      "__uuid__": "c62f405c-a622-44f2-8543-fcc959724791"
+    },
     "_id": ""
   },
   {

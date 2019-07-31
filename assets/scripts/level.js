@@ -45,6 +45,10 @@ cc.Class({
         updateMenuPrefab: {
             default: null,
             type: cc.Prefab
+        },
+        enemyPrefbs:{
+            default:null,
+            type:cc.Prefab
         }
 
     },
@@ -63,6 +67,13 @@ cc.Class({
         global.event.on("update_tower", this.updateTower.bind(this));
         global.event.on("sell_tower", this.sellTower.bind(this));
         global.event.on("game_start", this.gameStart.bind(this));
+
+        this.currentWaveCount = 0;
+        this.currentEnemyCount = 0;
+        this.addEnemyCurrentTime =0;
+        this.addWaveCurrentTime=0;
+
+    
 
     },
     setTouchEvent: function(node) {
@@ -162,7 +173,7 @@ cc.Class({
 
     },
     gameStart:function(){
-        cc.loader.loadRes("./config/levelConfig",(err,result)=>{
+        cc.loader.loadRes("./config/levelConfig.json",(err,result)=>{
             if(err){
                 cc.log("load config err"+err);
 
@@ -170,12 +181,55 @@ cc.Class({
                 cc.log("load succ"+JSON.stringify(result));
             }
 
-            let config = reult["level_1"];
+            let config = result.json["level_1"];
+            this.levelConfig =config;
+         //   this.wavesConfig = wavesConfig;
+           // this.currentWaveConfig=this.wavesConfig[0];
         });
+
+    },
+
+    addEnemy:function(tyoe){
+        //cc.log("add Enemy"+this.currentEnemyCount);
+      //  cc.log("add Wave"+this.currentWaveCount)
+
+    },
+    addWave:function(){
 
     },
     onDestroy: function() {
         global.event.off("build_tower", this.buildTower);
+    },
+    update: function(dt){
+        if(this.levelConfig&&this.currentWaveCount<=this.levelConfig.waves.length){
+            if(this.currentWaveConfig){
+                if(this.addEnemyCurrentTime>this.currentWaveConfig.dt){
+                this.addEnemyCurrentTime=0;
+                this.currentEnemyCount++;
+                this.addEnemy(this.currentWaveConfig.type);
+                if(this.currentEnemyCount>=this.currentWaveConfig.count){
+                        this.currentWaveConfig=undefined;
+                }
+
+
+                }else{
+                this.addEnemyCurrentTime+=dt;
+                }
+
+            }else {
+                if(this.addWaveCurrentTime>this.levelConfig.dt){
+                this.addWaveCurrentTime=0;
+                this.currentEnemyCount=0;
+                this.currentWaveConfig=this.levelConfig.waves[this.currentWaveCount];
+                this.currentWaveCount++;
+                 
+                }
+                else{
+                this.addWaveCurrentTime+=dt;
+                }
+            }
+
+        }
     }
 
 });
